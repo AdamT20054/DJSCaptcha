@@ -9,10 +9,13 @@ const chars = [
     "f",
     "g",
     "h",
+    "i",
     "j",
     "k",
+    "l",
     "m",
     "n",
+    "o",
     "p",
     "q",
     "r",
@@ -32,11 +35,13 @@ const chars = [
     "F",
     "G",
     "H",
+    "I",
     "J",
     "K",
     "L",
     "M",
     "N",
+    "O",
     "P",
     "Q",
     "R",
@@ -48,6 +53,8 @@ const chars = [
     "X",
     "Y",
     "Z",
+    "0",
+    "1",
     "2",
     "3",
     "4",
@@ -56,7 +63,7 @@ const chars = [
     "7",
     "8",
     "9"
-]
+];
 
 module.exports = async function createCaptcha(caseSensitive) {
 
