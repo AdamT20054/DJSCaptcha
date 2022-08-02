@@ -4,7 +4,7 @@ const EventEmitter = require("events");
 const createCaptcha = require("./createCaptcha");
 const handleChannelType = require("./handleChannelType");
 const client = require("../../index");
-const chalk = require('chalk');
+import chalk from "chalk";
 
 
 /**
