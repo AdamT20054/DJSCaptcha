@@ -3,9 +3,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandType, B
 const EventEmitter = require("events");
 const createCaptcha = require("./createCaptcha");
 const handleChannelType = require("./handleChannelType");
-const client = require("../../index");
-import chalk from "chalk";
-
+const chalk = require("chalk");
 
 /**
  * Captcha Options
