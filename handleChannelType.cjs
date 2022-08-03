@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandType, ButtonStyle } = require('discord.js');
+
 
 
 /**
@@ -14,7 +14,7 @@ module.exports = async function handleChannelType(client, options, user) {
     if (!options.channelID) {
         channel = await user.createDM();
     } else {
-        if (options.sendToTextChannel == true) {
+        if (options.sendToTextChannel === true) {
             channel = (await client.guilds.fetch(options.guildID)).channels.resolve(options.channelID);
         }
     }
