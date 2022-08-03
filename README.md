@@ -82,8 +82,8 @@ client.on('guildMemberAdd', async (member) => {
         addRoleOnSuccess: true, // [Optional | defaults to true] Whether you want the bot to add the role to the user if the captcha is solved.
         removeRoleOnSuccess: true, // [Optional | defaults to false] Whether you want the bot to remove the role from the user if the captcha is not solved.
         kickOnFailure: true, // [Optional | defaults to false] Whether you want the bot to kick the user if the captcha is failed.
-        kickIfRoleAdded: false, // [Optional | defaults to false] Whether to kick the user if they have the role added to them without the captcha being completed
-        kickIfRoleRemoved: false, // [Optional | defaults to false] Whether to kick the user if they have the role removed from them without the captcha being completed
+        kickIfRoleAdded: false, // [Optional | defaults to false | kickOnFailure must be true] Whether to kick the user if they have the role added to them without the captcha being completed.
+        kickIfRoleRemoved: false, // [Optional | defaults to false | kickOnFailure must be true] Whether to kick the user if they have the role removed from them without the captcha being completed
         caseSensitive: true, // [Optional | defaults to true] Whether you want the captcha responses to be case-sensitive.
         attempts: 3, // [Optional | defaults to 3] The number of attempts before captcha is considered to be failed.
         timeout: 300000, // [Optional | defaults to 60000] The time the user has to solve the captcha on each attempt in milliseconds.
@@ -121,7 +121,7 @@ client.on('guildMemberAdd', async (member) => {
 ```javascript
     customPromptEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
     customSuccessEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
-    customFailureEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
+    customFailureEmbed: new EmbedBuilder() // [Optional] Customise the embed that will be sent
 ```
 ### To learn more about creating your own embeds, refer to the [Discord.js EmbedBuilder](https://discordjs.guide/popular-topics/embeds) documentation.
 <br/>
@@ -139,6 +139,20 @@ Use the option `sendToTextChannel`, and set it to `true` to always send the CAPT
 The `sendToTextChannel` option determines whether you want the CAPTCHA to be sent to a specified Text Channel instead of Direct Messages, regardless of whether the user's DMs are locked.
 
 Use the option `channelID` to specify the Text Channel.
+<br/>
+<br/>
+## **`kickIfRoleAdded`** Option Explained
+The `kickIfRoleAdded` option determines whether you want the bot to kick the user if they have the role added to them without the captcha being completed. If this option is set to `true`, the bot will kick the user if they have the role added to them without the captcha being completed. `kickOnFailure` must be set to `true` for this option to work.
+If you are using this bot alongside other verification methods, or you want to manually verify some people, keep this option as `false`
+
+Use the option `false` to not kick the user if they have the role added to them without the captcha being completed.
+<br/>
+<br/>
+## **`kickIfRoleRemoved`** Option Explained
+The `kickIfRoleRemoved` option determines whether you want the bot to kick the user if they have the role removed from them without the captcha being completed. If this option is set to `true`, the bot will kick the user if they have the role removed them without the captcha being completed. `kickOnFailure` must be set to `true` for this option to work.
+If you are using this bot alongside other verification methods, or you want to manually verify some people, keep this option as `false`
+
+Use the option `false` to not kick the user if they have the role added to them without the captcha being completed.
 <br/>
 <br/>
 <br/>
