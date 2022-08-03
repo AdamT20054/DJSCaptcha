@@ -323,6 +323,11 @@ class Captcha extends EventEmitter {
                                         reason: `Failed to pass CAPTCHA`
                                     });
                                 }
+                                if((captchaData.options.kickIfRoleRemoved === false) && (captchaData.options.kickIfRoleAdded === false)) {
+                                    await member.kick({
+                                        reason: `Failed to pass CAPTCHA`
+                                    });
+                                }
                             }
                             if ((channel.type === "GUILD_TEXT") && (!member.roles.cache.has(captchaData.options.addRole))) {
                                 setTimeout(() => msg.delete({
@@ -333,6 +338,11 @@ class Captcha extends EventEmitter {
                                     setTimeout(() => member.kick({
                                         reason: "Failed to pass CAPTCHA"
                                     }), 7500);
+                                }
+                                if((captchaData.options.kickIfRoleRemoved === false) && (captchaData.options.kickIfRoleAdded === false)) {
+                                    await member.kick({
+                                        reason: `Failed to pass CAPTCHA`
+                                    });
                                 }
                             }
                         })
