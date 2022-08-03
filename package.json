@@ -11,11 +11,9 @@
   "description": "A NPM module made to create a CAPTCHA to present to server members.",
   "dependencies": {
     "canvas": "^2.9.3",
-    "chalk": "^5.0.1",
     "discord.js": "^14.1.2",
     "lodash": "^4.17.21"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AdamT20054/DJSCaptcha.git"
