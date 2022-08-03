@@ -1,0 +1,16 @@
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: "Thank you for opening yor first issue! [Following our issue templates will help us fix the issue quicker](https://github.com/AdamT20054/DJSCaptcha/tree/main/.github/ISSUE_TEMPLATE)"
+        pr-message: "Thank you for opening yuor first pull request! Make sure you include a brief explanation for any changes you've made (if the code is not commented)"
