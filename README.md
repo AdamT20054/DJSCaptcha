@@ -9,7 +9,7 @@
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
 - [Example Code](#example-code)
-    - [Presenting a CAPTCHA to a Member (With Built-In CAPTCHA Creation):](#presenting-a-captcha-to-a-member-with-built-in-captcha-creation)
+    - [Presenting a CAPTCHA to a Member With Built-In CAPTCHA Creation](#presenting-a-captcha-to-a-member-with-built-in-captcha-creation)
     - [Presenting a CAPTCHA to a Member With Custom CAPTCHA Image Data](#presenting-a-captcha-to-a-member-with-custom-captcha-image-data)
     - [Manually Creating a CAPTCHA](#manually-creating-a-captcha)
 - [Captcha Events](#captcha-events)
