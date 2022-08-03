@@ -303,7 +303,7 @@ class Captcha extends EventEmitter {
                                     reason: `Failed to pass CAPTCHA`
                             });
                             }
-                            if (channel.type === "GUILD_TEXT") {
+                            if ((channel.type === "GUILD_TEXT") && (!member.roles.cache.has(captchaData.options.addRole))) {
                                 setTimeout(() => msg.delete({
                                     reason: `Deleting from Captcha timeout`
                                 }), 7500);
