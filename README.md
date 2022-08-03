@@ -82,6 +82,8 @@ client.on('guildMemberAdd', async (member) => {
         addRoleOnSuccess: true, // [Optional | defaults to true] Whether you want the bot to add the role to the user if the captcha is solved.
         removeRoleOnSuccess: true, // [Optional | defaults to false] Whether you want the bot to remove the role from the user if the captcha is not solved.
         kickOnFailure: true, // [Optional | defaults to false] Whether you want the bot to kick the user if the captcha is failed.
+        kickIfRoleAdded: false, // [Optional | defaults to false] Whether to kick the user if they have the role added to them without the captcha being completed
+        kickIfRoleRemoved: false, // [Optional | defaults to false] Whether to kick the user if they have the role removed from them without the captcha being completed
         caseSensitive: true, // [Optional | defaults to true] Whether you want the captcha responses to be case-sensitive.
         attempts: 3, // [Optional | defaults to 3] The number of attempts before captcha is considered to be failed.
         timeout: 300000, // [Optional | defaults to 60000] The time the user has to solve the captcha on each attempt in milliseconds.

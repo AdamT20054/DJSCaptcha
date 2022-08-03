@@ -15,6 +15,8 @@ const chalk = import('chalk');
  * @property {boolean} [addRoleOnSuccess=true] - Whether to add the role to the user when they complete the captcha
  * @property {boolean} [removeRoleOnSuccess=false] - Whether to remove the role from the user when they complete the captcha
  * @property {boolean} [kickOnFailure=false] - Whether to kick the user when they fail to complete the captcha
+ * @property {boolean} [kickIfRoleAdded=false] - Whether to kick the user if they have the role added when they fail to complete the captcha
+ * @property {boolean} [kickIfRoleRemoved=false] - Whether to kick the user if they have the role removed when they fail to complete the captcha
  * @property {boolean} [caseSensitive=true] - Whether the captcha responses are case sensitive
  * @property {number} [attempts=3] - The number of attempts before the captcha is considered to be failed
  * @property {number} [timeout=60000] - The time the user has to solve the captcha on each attempt in milliseconds
@@ -49,6 +51,10 @@ class Captcha extends EventEmitter {
      * - `removeRoleOnSuccess` - Whether to remove the role from the user when they complete the captcha
      *
      * - `kickOnFailure` - Whether to kick the user when they fail to complete the captcha
+     *
+     * - `kickIfRoleAdded` - Whether to kick the user if they have the role added to them without the captcha being completed
+     *
+     * - `kickIfRoleRemoved` - Whether to kick the user if they have the role removed from them without the captcha being completed
      *
      * - `caseSensitive` - Whether the captcha responses are case sensitive
      *
@@ -105,6 +111,16 @@ class Captcha extends EventEmitter {
         if ((options.removeRoleOnSuccess === true) && (!options.roleRemoveID)) {
             console.log(chalk.red(`[Captcha] No role ID to remove provided`));
             process.exit(1);
+        }
+
+        if((options.kickIfRoleAdded === true) && (!options.roleAddID)) {
+            console.log(chalk.red(`[Captcha] No role ID to add provided for kickIfRoleAdded. Defaulting to false`));
+            options.kickIfRoleAdded = false;
+        }
+
+        if((options.kickIfRoleRemoved === true) && (!options.roleRemoveID)) {
+            console.log(chalk.red(`[Captcha] No role ID to remove provided for kickIfRoleRemoved. Defaulting to false`));
+            options.kickIfRoleRemoved = false;
         }
 
         if (options.attempts < 1) {
@@ -299,17 +315,23 @@ class Captcha extends EventEmitter {
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
                             if (captchaData.options.kickOnFailure) {
-                                await member.kick({
-                                    reason: `Failed to pass CAPTCHA`
-                            });
+                                // if user has addRoleID role equiped, then they will be kicked
+                                if ( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ) {
+                                    await member.kick({
+                                        reason: `Failed to pass CAPTCHA`
+                                    });
+                                }
                             }
                             if ((channel.type === "GUILD_TEXT") && (!member.roles.cache.has(captchaData.options.addRole))) {
                                 setTimeout(() => msg.delete({
                                     reason: `Deleting from Captcha timeout`
                                 }), 7500);
-                                setTimeout(() => member.kick({
-                                    reason: "Failed to pass CAPTCHA"
-                                }), 7500);
+                                if ( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ))
+                                {
+                                    setTimeout(() => member.kick({
+                                        reason: "Failed to pass CAPTCHA"
+                                    }), 7500);
+                                }
                             }
                         })
                         return false;
@@ -424,13 +446,15 @@ class Captcha extends EventEmitter {
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
                             if (captchaData.options.kickOnFailure) {
-                                if (channel.type === "GUILD_TEXT") {
-                                    setTimeout(() => msg.delete({
-                                        reason: "Deleting from Captcha timeout"
-                                    }), 7500);
-                                    setTimeout(() => member.kick({
-                                        reason: "Failed to pass CAPTCHA"
-                                    }), 7500);
+                                if( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ) {
+                                    if (channel.type === "GUILD_TEXT") {
+                                        setTimeout(() => msg.delete({
+                                            reason: "Deleting from Captcha timeout"
+                                        }), 7500);
+                                        setTimeout(() => member.kick({
+                                            reason: "Failed to pass CAPTCHA"
+                                        }), 7500);
+                                    }
                                 }
                             }
 
