@@ -1,3 +1,5 @@
 .github/
 .idea/
 node_modules/
+./gitattributes
+CODE_OF_CONDUCT.md
