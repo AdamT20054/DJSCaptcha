@@ -68,7 +68,7 @@ npm i djscaptcha
 ```javascript
 const { EmbedBuilder, Collection, PermissionsBitField, Embed, Colors } = require('discord.js');
 const { Captcha } = require("djscaptcha");
-const client = require('..');
+const client = (`..`) // Import client here
 
 // Triggered by the guildMemberAdd event.
 
@@ -114,7 +114,7 @@ client.on('guildMemberAdd', async (member) => {
 
 });
 ```
-## To use the default embeds, simpley use the following code:
+## To use the default embeds, simply use the following code:
 
 ```javascript
     customPromptEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
