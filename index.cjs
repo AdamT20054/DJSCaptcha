@@ -1,5 +1,5 @@
 /* It creates a captcha, sends it to the user, and then checks if the user's response is correct */
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandType, ButtonStyle, Colors, Client, GuildMember } = require('discord.js');
+const { EmbedBuilder, GuildMember } = require('discord.js');
 const EventEmitter = require("events");
 const createCaptcha = require("./createCaptcha.cjs");
 const handleChannelType = require("./handleChannelType.cjs");
@@ -58,7 +58,7 @@ class Captcha extends EventEmitter {
      *
      * - `kickIfRoleRemoved` - Whether to kick the user if they have the role removed from them without the captcha being completed
      *
-     * - `caseSensitive` - Whether the captcha responses are case sensitive
+     * - `caseSensitive` - Whether the captcha responses are case-sensitive
      *
      * - `attempts` - The number of attempts before the captcha is considered to be failed
      *
@@ -187,8 +187,8 @@ class Captcha extends EventEmitter {
      *
      * __Note__: The CAPTCHA will be sent in DMs if `sendToTextChannel` is set to `false`, if the user has DMs disabled it will be sent in channelID if provided and deleted after the timeout
      *
-     * @param {GuildMember} member - The Discord Server Mmember to present the CAPTCHA to
-     * @returns {Promise<boolean>} - Whether the member completed the CAPTCHA or not
+     * @param {GuildMember} member - The Discord Server Member to present the CAPTCHA to
+     * @returns {Promise<void>} - Whether the member completed the CAPTCHA or not
      */
 
     async present(member) {
@@ -317,7 +317,7 @@ class Captcha extends EventEmitter {
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
                             if (captchaData.options.kickOnFailure) {
-                                // if user has addRoleID role equiped, then they will be kicked
+                                // if user has addRoleID role equipped, then they will be kicked
                                 if ( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ) {
                                     await member.kick({
                                         reason: `Failed to pass CAPTCHA`
@@ -329,7 +329,7 @@ class Captcha extends EventEmitter {
                                     });
                                 }
                             }
-                            if ((channel.type === "GUILD_TEXT") && (!member.roles.cache.has(captchaData.options.addRole))) {
+                            if ((channel.type === "GUILD_TEXT") && (!member.roles.cache.has(captchaData.options.roleAddID))) {
                                 setTimeout(() => msg.delete({
                                     reason: `Deleting from Captcha timeout`
                                 }), 7500);
@@ -481,7 +481,7 @@ class Captcha extends EventEmitter {
                 captchaText: captcha.text,
                 captchaOptions: this.options
             })
-            handleAttempt(this);
+            await handleAttempt(this);
         })
     }
 }
