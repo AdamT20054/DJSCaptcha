@@ -21,7 +21,7 @@
 
 # Description
 
-DJS Captcha sets out to generate on-the-fly CAPTCHAs based off your desired inputs to present to members of your server. The module both creates the CAPTCHA, listens for a result and then acts on the result by removing and/or adding roles to users in your server.
+DJS Captcha sets out to generate on-the-fly CAPTCHAAs based off your desired inputs to present to members of your server. The module both creates the CAPTCHA, listens for a result and then acts on the result by removing and/or adding roles to users in your server.
 
 The module was designed to primarily be used as a welcome CAPTCHA verification system.
 <br/>
@@ -42,7 +42,7 @@ This bot is designed for DiscordJS@V14, you may run into issues using it in earl
 
 DiscordJS@V14 requires Node@v16.9 or higher to run.
 
-If you are using a Ubuntu and other Debian based systems, you may need to install some Prerequisits for Canvas to run. You can install these by running the following in the CLI:
+If you are using an Ubuntu and other Debian based systems, you may need to install some Prerequisites for Canvas to run. You can install these by running the following in the CLI:
 ```bash
 sudo apt-get update
 ```
@@ -183,11 +183,13 @@ client.on("guildMemberAdd", async member => {
 Don't like how the automatically created CAPTCHA looks? Simply pass in your own `CaptchaImageData` to the `present` method!
 
 ```js
+// noinspection JSAnnotator
+
 client.on("guildMemberAdd", async member => {
-    //in your bot application in the dev portal, make sure you have intents turned on!
-    const captchaImageBuffer = //custom image as buffer
-    const captchaImageText = //answer to the captcha as string
-    captcha.present(member, { image: captchaImageBuffer, text: captchaImageText });
+  //in your bot application in the dev portal, make sure you have intents turned on!
+  const captchaImageBuffer = //custom image as buffer
+  const captchaImageText = //answer to the captcha as string
+          captcha.present(member, {image: captchaImageBuffer, text: captchaImageText});
 });
 ```
 
@@ -200,7 +202,7 @@ In addition, if you have the `showAttemptCount` option enabled, any embed footer
 ## Manually Creating a CAPTCHA
 ---
 
-You can use the `createCaptcha` method to easily create your own CAPTCHA using Discord.js Captcha's Built-In CAPTCHA Creation. It also comes with broader control over the length of the CAPTCHA, and the characters you would like to use by using a blacklist.
+You can use the `createCaptcha` method to easily create your own CAPTCHA using Discord.js Catch's Built-In CAPTCHA Creation. It also comes with broader control over the length of the CAPTCHA, and the characters you would like to use by using a blacklist.
 
 **Note:** Built-In CAPTCHA Creation uses `A-Z`, `a-z` and `0-9`.
 
