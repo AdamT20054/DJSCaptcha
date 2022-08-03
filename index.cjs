@@ -1,8 +1,8 @@
 /* It creates a captcha, sends it to the user, and then checks if the user's response is correct */
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandType, ButtonStyle, Colors, Client, GuildMember } = require('discord.js');
 const EventEmitter = require("events");
-const createCaptcha = require("./createCaptcha");
-const handleChannelType = require("./handleChannelType");
+const createCaptcha = require("./createCaptcha.cjs");
+const handleChannelType = require("./handleChannelType.cjs");
 const chalk = require("chalk");
 
 /**
