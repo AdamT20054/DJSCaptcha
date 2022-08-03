@@ -192,12 +192,14 @@ class Captcha extends EventEmitter {
      */
 
     async present(member) {
+        //Checking if the member is provided.
         if (!member) {
             return console.log(`[Captcha] No member provided`);
         }
 
         const user = member.user;
 
+        //Creating a captcha.
         const captcha = await createCaptcha(this.options.caseSensitive).catch(err => {
             console.log(`[Captcha] Error creating captcha: ${err}`);
             return false;
@@ -208,7 +210,7 @@ class Captcha extends EventEmitter {
 
         let captchaResponses = [];
 
-
+        // Construct the default captchaIncorrect embed
         let captchaIncorrect = new EmbedBuilder()
             .setTitle("❌ You Failed to Complete the CAPTCHA!")
             .setDescription(`${member.user}, you failed to solve the CAPTCHA!\n\nCAPTCHA Text: **${captcha.text}**`)
@@ -216,21 +218,25 @@ class Captcha extends EventEmitter {
             .setColor("#ff0000")
             .setThumbnail(member.guild.iconURL({ dynamic: true }));
 
+        // If customFailureEmbed, use that instead of the default embed
         if (this.options.customFailureEmbed) {
             captchaIncorrect = this.options.customFailureEmbed;
         }
 
-
+        // Construct the default captchaCorrect embed
         let captchaCorrect = new EmbedBuilder()
             .setTitle("✅ You Completed the CAPTCHA!")
             .setDescription(`${member.user}, you completed the CAPTCHA successfully! You have been given access to **${member.guild.name}**!`)
             .setTimestamp()
             .setColor("#00ff00")
             .setThumbnail(member.guild.iconURL({ dynamic: true }));
+
+        // If customSuccessEmbed, use that instead of the default embed
         if (this.options.customSuccessEmbed) {
             captchaCorrect = this.options.customSuccessEmbed;
         }
 
+        // Construct the default captchaPrompt embed
         let captchaPrompt = new EmbedBuilder()
             .setTitle(`🔐 Welcome to ${member.guild.name}! 🔐`)
             .addFields({
@@ -239,11 +245,12 @@ class Captcha extends EventEmitter {
             })
             .setColor("#00e0ff")
 
-
+        // If customPromptEmbed, use that instead of the default embed
         if (this.options.customPromptEmbed) {
             captchaPrompt = this.options.customPromptEmbed
         }
 
+        // If showAttemptCount is true, add the attempt count to the prompt footer
         if (this.options.showAttemptCount) {
             captchaPrompt.setFooter({
                 text: this.options.attempts === 1 ? "You have one attempt to solve the CAPTCHA." : `Attempts Left: ${attemptsLeft}`
@@ -251,11 +258,13 @@ class Captcha extends EventEmitter {
             captchaPrompt.setImage(`attachment://captcha.png`);
         }
 
+        // Handling the captcha.
         await handleChannelType(this.client, this.options, user).then(async channel => {
             let captchaEmbed;
 
 
             try {
+                // Checking if the channelID is set and if the sendToTextChannel is set to true. If it is, it will fetch the channelID and resolve it. If not, it will create a DM.
                 if ((this.options.channelID) && this.options.sendToTextChannel === true) {
                     // noinspection JSUnresolvedVariable
                     channel = (await this.client.channels.fetch(this.options.channelID)).channels.resolve(this.options.channelID)
@@ -264,6 +273,7 @@ class Captcha extends EventEmitter {
                 }
 
 
+                // Sending the captcha image to the channel.
                 // noinspection JSUnresolvedFunction
                 captchaEmbed = await channel.send({
                     embeds: [captchaPrompt],
@@ -273,9 +283,11 @@ class Captcha extends EventEmitter {
                 })
             }
             catch {
+                // Fetching the guild and channel ID's from options
                 // noinspection JSUnresolvedVariable
                 channel = (await this.client.guilds.fetch(this.options.guildID)).channels.resolve(this.options.channelID);
                 if (this.options.channelID) {
+                    // Sending the captcha to the channel.
                     captchaEmbed = await channel.send({
                         embeds: [captchaPrompt],
                         files: [{
@@ -287,6 +299,7 @@ class Captcha extends EventEmitter {
                 }
             }
 
+            // Filtering the messages in the channel to only those that are sent by the user who is being verified.
             const captchaFilter = x => {
                 return (x.author.id === member.user.id)
             }
@@ -298,10 +311,13 @@ class Captcha extends EventEmitter {
              */
 
             async function handleAttempt(captchaData) {
+                // Await a message from the user.
                 await captchaEmbed.channel.awaitMessages({
                     filter: captchaFilter, max: 1, time: captchaData.options.timeout
                 }).then(async responses => {
+                    // Checking if the message is correct.
 
+                    // Checking if the user has responded to the captcha. If they have not responded, it will kick them from the server.
                     if (!responses.size) {
                         // No response given
 
@@ -369,7 +385,9 @@ class Captcha extends EventEmitter {
                         await responses.first().delete();
                     }
 
+                    // Checking if the answer is correct or not.
                     if (answer === captcha.text) {
+                        // Answer is correct.
                         captchaData.emit("success", {
                             member: member,
                             responses: captchaResponses,
@@ -378,6 +396,7 @@ class Captcha extends EventEmitter {
                             captchaOptions: captchaData.options
                         })
 
+                        // Adding a role to the user if they pass the captcha and addRoleOnSuccess is true.
                         if (captchaData.options.addRoleOnSuccess) {
 
                             try {
@@ -387,7 +406,8 @@ class Captcha extends EventEmitter {
                                 console.log(`[Captcha] Error adding role to ${member.user.tag}`);
                             }
                         }
-                        if (captchaData.options.removeRoleOnSuccess) { 
+                        // Removing the role from the user if removeRoleOnSuccess is set to true.
+                        if (captchaData.options.removeRoleOnSuccess) {
                             try {
                                 await member.roles.remove(captchaData.options.roleRemoveID, 'Passed the CAPTCHA');
                             }
@@ -412,10 +432,13 @@ class Captcha extends EventEmitter {
                         })
                         return true;
                     } else {
+                        // Answer is incorrect.
                         if (attemptsLeft > 1) {
+                            // If the user has more than one attempt left, it will send a new captcha.
                             attemptsLeft--;
                             attemptsTaken++;
                             if (channel.type === "GUILD_TEXT") {
+                                // If the channel is in a guild, it will delete the old captcha.
                                 await captchaEmbed.edit({
                                     embeds: [captchaPrompt.setFooter({
                                         text: `Attempts Left: ${attemptsLeft}`
@@ -427,6 +450,7 @@ class Captcha extends EventEmitter {
                                 })
                             }
                             if (channel.type !== "GUILD_TEXT") {
+                                // If the channel is in a DM, it will send a new captcha.
                                 await captchaEmbed.edit({
                                     embeds: [captchaPrompt.setFooter({
                                         text: `Attempts Left: ${attemptsLeft}`
@@ -448,17 +472,21 @@ class Captcha extends EventEmitter {
                             captchaOptions: captchaData.options
                         })
 
+                        // If the user has no more attempts left, it will kick them.
                         setTimeout(() => member.kick({
                             reason: "Failed to pass CAPTCHA"
                         }), 7500);
 
+                        // If channel is in a guild, it will delete the old captcha.
                         if (channel.type === "GUILD_TEXT") {
                             await captchaEmbed.delete();
                         }
 
+                        // If channel is in a DM, it will send the incorrect embed.
                         await channel.send({
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
+                            // if kickOnFailure is true, it will kick the user.
                             if (captchaData.options.kickOnFailure) {
                                 if( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ) {
                                     if (channel.type === "GUILD_TEXT") {
