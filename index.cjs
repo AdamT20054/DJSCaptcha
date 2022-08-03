@@ -3,8 +3,10 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ApplicationCommandType, B
 const EventEmitter = require("events");
 const createCaptcha = require("./createCaptcha.cjs");
 const handleChannelType = require("./handleChannelType.cjs");
-const chalk = import('chalk');
+
+
 /**
+ *
  * Captcha Options
  * @typedef {object} CaptchaOptions
  * @property {string} guildID - The guild ID to send the captcha to
@@ -80,7 +82,7 @@ class Captcha extends EventEmitter {
         super();
 
         if(!client) {
-            console.log(chalk.red(`[Captcha] No client provided`));
+            console.log(`[Captcha] No client provided`);
             process.exit(1);
         }
 
@@ -94,86 +96,86 @@ class Captcha extends EventEmitter {
 
 
         if (!options.guildID) {
-            console.log(chalk.red(`[Captcha] No guild ID provided`));
+            console.log(`[Captcha] No guild ID provided`);
             process.exit(1);
         }
 
         if ((options.sendToTextChannel === true) && (!options.channelID)) {
-            console.log(chalk.red(`[Captcha] No channel ID provided`));
+            console.log(`[Captcha] No channel ID provided`);
             process.exit(1);
         }
 
         if ((options.addRoleOnSuccess === true) && (!options.roleAddID)) {
-            console.log(chalk.red(`[Captcha] No role ID to add provided`));
+            console.log(`[Captcha] No role ID to add provided`);
             process.exit(1);
         }
 
         if ((options.removeRoleOnSuccess === true) && (!options.roleRemoveID)) {
-            console.log(chalk.red(`[Captcha] No role ID to remove provided`));
+            console.log(`[Captcha] No role ID to remove provided`);
             process.exit(1);
         }
 
         if((options.kickIfRoleAdded === true) && (!options.roleAddID)) {
-            console.log(chalk.red(`[Captcha] No role ID to add provided for kickIfRoleAdded. Defaulting to false`));
+            console.log(`[Captcha] No role ID to add provided for kickIfRoleAdded. Defaulting to false`);
             options.kickIfRoleAdded = false;
         }
 
         if((options.kickIfRoleRemoved === true) && (!options.roleRemoveID)) {
-            console.log(chalk.red(`[Captcha] No role ID to remove provided for kickIfRoleRemoved. Defaulting to false`));
+            console.log(`[Captcha] No role ID to remove provided for kickIfRoleRemoved. Defaulting to false`);
             options.kickIfRoleRemoved = false;
         }
 
         if (options.attempts < 1) {
-            console.log(chalk.red(`[Captcha] Attempts must be greater than 0`));
+            console.log(`[Captcha] Attempts must be greater than 0`);
             process.exit(1);
         }
 
         if (options.timeout < 1) {
-            console.log(chalk.red(`[Captcha] Invalid timeout provided`));
+            console.log(`[Captcha] Invalid timeout provided`);
             process.exit(1);
         }
 
         if (options.caseSensitive && (typeof options.caseSensitive !== "boolean")) {
-            console.log(chalk.red(`[Captcha] 'CaseSensitive' must be a boolean value`));
+            console.log(`[Captcha] 'CaseSensitive' must be a boolean value`);
             process.exit(1);
         }
 
         if (options.customPromptEmbed && (typeof options.customPromptEmbed === "string")) {
-            console.log(chalk.red(`[Captcha] Invalid instance of MessageEmbed provided for 'customPromptEmbed'`));
+            console.log(`[Captcha] Invalid instance of MessageEmbed provided for 'customPromptEmbed'`);
             process.exit(1);
         }
 
         if (options.customSuccessEmbed && (typeof options.customSuccessEmbed === "string")) {
-            console.log(chalk.red(`[Captcha] Invalid instance of MessageEmbed provided for 'customSuccessEmbed'`));
+            console.log(`[Captcha] Invalid instance of MessageEmbed provided for 'customSuccessEmbed'`);
             process.exit(1);
         }
 
         if (options.customFailureEmbed && (typeof options.customFailureEmbed === "string")) {
-            console.log(chalk.red(`[Captcha] Invalid instance of MessageEmbed provided for 'customFailureEmbed'`));
+            console.log(`[Captcha] Invalid instance of MessageEmbed provided for 'customFailureEmbed'`);
             process.exit(1);
         }
 
         if (options.addRoleOnSuccess === undefined) {
-            console.log(chalk.yellow(`[Captcha] No 'addRoleOnSuccess' option provided, defaulting to true`));
+            console.log(`[Captcha] No 'addRoleOnSuccess' option provided, defaulting to true`);
             options.addRoleOnSuccess = true;
         }
 
         if (options.removeRoleOnSuccess === undefined) {
-            console.log(chalk.yellow(`[Captcha] No 'removeRoleOnSuccess' option provided, defaulting to false`));
+            console.log(`[Captcha] No 'removeRoleOnSuccess' option provided, defaulting to false`);
             options.removeRoleOnSuccess = false;
         }
 
         options.attempts = options.attempts || 1;
 
         if (options.caseSensitive === undefined) {
-            console.log(chalk.yellow(`[Captcha] No 'caseSensitive' option provided, defaulting to true`));
+            console.log(`[Captcha] No 'caseSensitive' option provided, defaulting to true`);
             options.caseSensitive = true;
         }
 
         options.timeout = options.timeout || 60000;
 
         if (options.showAttemptCount === undefined) {
-            console.log(chalk.yellow(`[Captcha] No 'showAttemptCount' option provided, defaulting to true`));
+            console.log(`[Captcha] No 'showAttemptCount' option provided, defaulting to true`);
             options.showAttemptCount = true;
         }
 
@@ -191,13 +193,13 @@ class Captcha extends EventEmitter {
 
     async present(member) {
         if (!member) {
-            return console.log(chalk.red(`[Captcha] No member provided`));
+            return console.log(`[Captcha] No member provided`);
         }
 
         const user = member.user;
 
         const captcha = await createCaptcha(this.options.caseSensitive).catch(err => {
-            console.log(chalk.red(`[Captcha] Error creating captcha: ${err}`));
+            console.log(`[Captcha] Error creating captcha: ${err}`);
             return false;
         });
 
@@ -278,7 +280,7 @@ class Captcha extends EventEmitter {
                         }]
                     })
                 } else {
-                    console.log(chalk.red(`[Captcha] Error sending CAPTCHA for ${user.tag}`));
+                    console.log(`[Captcha] Error sending CAPTCHA for ${user.tag}`);
                 }
             }
 
@@ -369,7 +371,7 @@ class Captcha extends EventEmitter {
                                 await member.roles.add(captchaData.options.roleAddID, 'Passed the CAPTCHA');
                             }
                             catch (err) {
-                                console.log(chalk.red(`[Captcha] Error adding role to ${member.user.tag}`));
+                                console.log(`[Captcha] Error adding role to ${member.user.tag}`);
                             }
                         }
                         if (captchaData.options.removeRoleOnSuccess) { 
@@ -377,9 +379,8 @@ class Captcha extends EventEmitter {
                                 await member.roles.remove(captchaData.options.roleRemoveID, 'Passed the CAPTCHA');
                             }
                             catch (err) {
-                                console.log(captchaData.options.roleRemoveID)
-                                console.log(err)
-                                console.log(chalk.red(`[Captcha] Error removing role from ${member.user.tag}`));
+
+                                console.log(`[Captcha] Error removing role from ${member.user.tag}`);
                             }
                         }
 
