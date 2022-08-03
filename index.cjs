@@ -326,8 +326,8 @@ class Captcha extends EventEmitter {
                                 setTimeout(() => msg.delete({
                                     reason: `Deleting from Captcha timeout`
                                 }), 7500);
-                                if ( (member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded) ) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ))
-                                {
+                                if((member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ( (!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved) ) ) {
+
                                     setTimeout(() => member.kick({
                                         reason: "Failed to pass CAPTCHA"
                                     }), 7500);
