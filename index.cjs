@@ -352,7 +352,7 @@ class Captcha extends EventEmitter {
                         }
                         if (captchaData.options.removeRoleOnSuccess) { 
                             try {
-                                await member.roles.remove(captchaData.options.roleRemoveID, 'Failed the CAPTCHA');
+                                await member.roles.remove(captchaData.options.roleRemoveID, 'Passed the CAPTCHA');
                             }
                             catch (err) {
                                 console.log(captchaData.options.roleRemoveID)
