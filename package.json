@@ -5,9 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
-  "keywords": [],
+  "keywords": ["discord.js", "discord", "captcha", "discord.js-captcha", "djscaptcha", "recaptcha", "turing", "robot", "verification", "discord verification", "security", "Open Source"],
   "author": "Adam",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "description": "A NPM module made to create a CAPTCHA to present to server members.",
   "dependencies": {
     "canvas": "^2.9.3",
