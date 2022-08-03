@@ -257,12 +257,14 @@ class Captcha extends EventEmitter {
 
             try {
                 if ((this.options.channelID) && this.options.sendToTextChannel === true) {
+                    // noinspection JSUnresolvedVariable
                     channel = (await this.client.channels.fetch(this.options.channelID)).channels.resolve(this.options.channelID)
                 } else {
                     channel = await user.createDM()
                 }
 
 
+                // noinspection JSUnresolvedFunction
                 captchaEmbed = await channel.send({
                     embeds: [captchaPrompt],
                     files: [{
@@ -271,6 +273,7 @@ class Captcha extends EventEmitter {
                 })
             }
             catch {
+                // noinspection JSUnresolvedVariable
                 channel = (await this.client.guilds.fetch(this.options.guildID)).channels.resolve(this.options.channelID);
                 if (this.options.channelID) {
                     captchaEmbed = await channel.send({
