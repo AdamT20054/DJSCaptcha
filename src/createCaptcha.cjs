@@ -1,5 +1,5 @@
 const { Canvas } = require("canvas");
-const { shuffle } = require(`./util/lodash/shuffle.js`);
+const { shuffle } = require(`../util/lodash/shuffle.js`);
 const chars = [
     "a",
     "b",
