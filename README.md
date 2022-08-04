@@ -238,6 +238,7 @@ captcha.on("success", data => {
 });
 ```
 
+**Note:** These events are used alongside the options passed in. For example, if `kickOnFailure` is set to `true`, the bot will kick the user on the `timeout` (or `failure` if the user has no attempts left), as well as what your manual event contains.
 <br/>
 
 # Screenshots
