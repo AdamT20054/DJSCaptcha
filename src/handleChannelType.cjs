@@ -1,6 +1,3 @@
-
-
-
 /**
  * 
  * @param {Discord.Client} client
@@ -8,7 +5,6 @@
  * @param {Discord.User} user
  * @returns {Discord.DMChannel | Discord.TextChannel}
  */
-
 module.exports = async function handleChannelType(client, options, user) {
     let channel;
 
