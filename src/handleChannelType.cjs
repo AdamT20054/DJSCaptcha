@@ -1,5 +1,4 @@
 /**
- * 
  * @param {Discord.Client} client
  * @param {any} options
  * @param {Discord.User} user
