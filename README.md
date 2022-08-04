@@ -242,9 +242,9 @@ captcha.on("success", data => {
 <br/>
 
 # Screenshots
-![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/images/CaptchaSolved.png?raw=true)
-![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/images/CaptchaFailed.png?raw=true)
-![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/images/CaptchaAudit.png?raw=true)
+![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/src/images/CaptchaSolved.png?raw=true)
+![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/src/images/CaptchaFailed.png?raw=true)
+![Image of Captcha](https://github.com/AdamT20054/DJSCaptcha/blob/main/src/images/CaptchaAudit.png?raw=true)
 <br/>
 
 ## License
