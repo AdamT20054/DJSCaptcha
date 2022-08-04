@@ -1,4 +1,4 @@
-const { copyArray } = require(`./copyArray`)
+const copyArray = require(`./copyArray`)
 // https://github.com/lodash/lodash/blob/master/shuffle.js
 
 
