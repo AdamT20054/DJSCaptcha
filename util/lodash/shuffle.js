@@ -1,5 +1,4 @@
-import copyArray from './copyArray.js'
-
+const { copyArray } = require(`./copyArray`)
 // https://github.com/lodash/lodash/blob/master/shuffle.js
 
 
