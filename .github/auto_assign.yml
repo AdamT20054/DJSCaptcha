@@ -4,6 +4,6 @@ addReviewers: true
 # Set to true to add assignees to pull requests
 addAssignees: true
 
-# A list of reviewers to be added to pull requests (GitHub user name)
+# A list of reviewers to be added to pull requests (GitHub username)
 reviewers:
   - AdamT20054

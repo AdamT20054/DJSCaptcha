@@ -259,6 +259,7 @@ class Captcha extends EventEmitter {
         }
 
         // Handling the captcha.
+        // noinspection JSUnresolvedFunction
         await handleChannelType(this.client, this.options, user).then(async channel => {
             let captchaEmbed;
 

@@ -8,6 +8,7 @@ module.exports = async function handleChannelType(client, options, user) {
     let channel;
 
     if (!options.channelID) { // If no channel ID is provided, create a new DM channel
+        // noinspection JSUnresolvedFunction
         channel = await user.createDM();
     } else {
         if (options.sendToTextChannel === true) {
