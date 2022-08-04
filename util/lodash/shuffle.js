@@ -17,7 +17,7 @@ const { copyArray } = require(`./copyArray`)
  * shuffle([1, 2, 3, 4])
  * // => [4, 1, 3, 2]
  */
-module.exports = function shuffle(array) {
+function shuffle(array) {
     const length = array == null ? 0 : array.length
     if (!length) {
         return []
@@ -33,3 +33,5 @@ module.exports = function shuffle(array) {
     }
     return result
 }
+
+module.exports = shuffle
