@@ -77,7 +77,7 @@ async function random() {
     return mantissa * Math.pow(2, -52);
 }
 
-async function createCaptcha(caseSensitive) {
+module.exports = async function createCaptcha(caseSensitive) {
 
     const canvas = new Canvas(400, 250);
     const ctx = canvas.getContext("2d");
@@ -176,4 +176,3 @@ async function createCaptcha(caseSensitive) {
     };
 }
 
-console.log(createCaptcha(true));
