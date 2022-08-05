@@ -1,3 +1,5 @@
+// noinspection ES6RedundantAwait
+
 const { Canvas } = require("canvas");
 const shuffle = require(`../util/lodash/shuffle.js`);
 const random = require(`../util/crypto/random.js`);
@@ -96,7 +98,9 @@ module.exports = async function createCaptcha(caseSensitive) {
         for (let j = 0; j < 5; j++)
             coords[i][j] = Math.round(await random() * 80) + j * 80;
         if (!(i % 2))
-            coords[i] = await shuffle(coords[i]);
+            {
+                coords[i] = await shuffle(coords[i]);
+            }
     }
 
     for (let i = 0; i < coords.length; i++) {
