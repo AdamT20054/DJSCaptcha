@@ -28,7 +28,7 @@ async function shuffle(array) {
     const lastIndex = length - 1
     const result = copyArray(array)
     while (++index < length) {
-        const rand = index + Math.floor(await random() * (lastIndex - index + 1))
+        const rand = index + Math.floor((await random()) * (lastIndex - index + 1))
         const value = result[rand]
         result[rand] = result[index]
         result[index] = value

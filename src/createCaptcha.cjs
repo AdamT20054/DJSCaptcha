@@ -96,7 +96,7 @@ module.exports = async function createCaptcha(caseSensitive) {
         for (let j = 0; j < 5; j++)
             coords[i][j] = Math.round(await random() * 80) + j * 80;
         if (!(i % 2))
-            coords[i] = shuffle(coords[i]);
+            coords[i] = await shuffle(coords[i]);
     }
 
     for (let i = 0; i < coords.length; i++) {
@@ -140,7 +140,7 @@ module.exports = async function createCaptcha(caseSensitive) {
 
     // Set text value and print it to canvas
     ctx.beginPath();
-    let text = shuffle(chars).slice(0, 6).join("");
+    let text = (await shuffle(chars)).slice(0, 6).join("");
     if (caseSensitive !== true) text = text.toLowerCase();
     ctx.fillText(text, 0, 0);
 
