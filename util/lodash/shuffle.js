@@ -19,7 +19,7 @@ const random = require(`../crypto/random.js`);
  * shuffle([1, 2, 3, 4])
  * // => [4, 1, 3, 2]
  */
-module.exports = async function shuffle(array) {
+async function shuffle(array) {
     const length = array == null ? 0 : array.length
     if (!length) {
         return []
@@ -35,3 +35,5 @@ module.exports = async function shuffle(array) {
     }
     return result
 }
+
+module.exports = shuffle
