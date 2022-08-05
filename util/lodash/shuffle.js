@@ -36,4 +36,4 @@ async function shuffle(array) {
     return result
 }
 
-module.exports = shuffle
+module.exports = shuffle;
