@@ -167,4 +167,3 @@ module.exports = async function createCaptcha(caseSensitive) {
         text: text
     };
 }
-console.log(createCaptcha());

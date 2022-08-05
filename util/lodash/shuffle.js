@@ -1,6 +1,7 @@
 const copyArray = require(`./copyArray`)
 // https://github.com/lodash/lodash/blob/master/shuffle.js
 const crypto = require('crypto').webcrypto;
+const random = require(`../crypto/random.js`);
 
 
 
@@ -27,7 +28,7 @@ function shuffle(array) {
     const lastIndex = length - 1
     const result = copyArray(array)
     while (++index < length) {
-        const rand = index + Math.floor(Math.random() * (lastIndex - index + 1))
+        const rand = index + Math.floor(random() * (lastIndex - index + 1))
         const value = result[rand]
         result[rand] = result[index]
         result[index] = value
