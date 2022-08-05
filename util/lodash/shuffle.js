@@ -2,7 +2,6 @@
 // Edited to be cryptographically secure.
 
 const copyArray = require(`./copyArray`)
-const crypto = require('crypto').webcrypto;
 const random = require(`../crypto/random.js`);
 
 /**
