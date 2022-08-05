@@ -1,6 +1,7 @@
 const crypto = require('crypto').webcrypto;
 
 
+/* Generating a cryptographically secure random number between 0 and 1. */
 module.exports = async function random() {
     let arr = new Uint32Array(2);
     crypto.getRandomValues(arr);

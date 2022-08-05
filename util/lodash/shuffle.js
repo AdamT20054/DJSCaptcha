@@ -1,10 +1,9 @@
-const copyArray = require(`./copyArray`)
 // https://github.com/lodash/lodash/blob/master/shuffle.js
+// Edited to be cryptographically secure.
+
+const copyArray = require(`./copyArray`)
 const crypto = require('crypto').webcrypto;
 const random = require(`../crypto/random.js`);
-
-
-
 
 /**
  * Creates an array of shuffled values, using a version of the
