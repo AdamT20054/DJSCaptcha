@@ -74,7 +74,6 @@ const client = (`..`) // Import client here
 
 client.on('guildMemberAdd', async (member) => {
     const captcha = new Captcha(client, {
-        guildID: "803763753429762098", // [Mandatory] The ID of the guild to use.
         roleAddID: "803853753357959189", // [Optional if addRoleOnSuccess = false] The ID of the role to add to the user.
         roleRemoveID: "807093688466800712", // [Optional if removeRoleOnSuccess = false] The ID of the role to remove from the user.
         channelID: "803763753429762100", // [Optional if sendToTextChannel = false] The ID of the channel to send the CAPTCHA to.
