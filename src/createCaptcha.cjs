@@ -1,5 +1,7 @@
 const { Canvas } = require("canvas");
 const shuffle = require(`../util/lodash/shuffle.js`);
+// Crypto is used for a cryptographically strong random number generator.
+const crypto = require('crypto').webcrypto;
 const chars = [
     "a",
     "b",
@@ -64,8 +66,18 @@ const chars = [
     "8",
     "9"
 ];
+async function random() {
+    let arr = new Uint32Array(2);
+    crypto.getRandomValues(arr);
 
-module.exports = async function createCaptcha(caseSensitive) {
+// keep all 32 bits of the first, top 20 of the second for 52 random bits
+    let mantissa = (arr[0] * Math.pow(2,20)) + (arr[1] >>> 12)
+
+// shift all 52 bits to the right of the decimal point
+    return mantissa * Math.pow(2, -52);
+}
+
+async function createCaptcha(caseSensitive) {
 
     const canvas = new Canvas(400, 250);
     const ctx = canvas.getContext("2d");
@@ -90,7 +102,7 @@ module.exports = async function createCaptcha(caseSensitive) {
         if (!coords[i])
             coords[i] = [];
         for (let j = 0; j < 5; j++)
-            coords[i][j] = Math.round(Math.random() * 80) + j * 80;
+            coords[i][j] = Math.round(await random() * 80) + j * 80;
         if (!(i % 2))
             coords[i] = shuffle(coords[i]);
     }
@@ -119,7 +131,7 @@ module.exports = async function createCaptcha(caseSensitive) {
     // Draw circles
     for (let i = 0; i < 200; i++) {
         ctx.beginPath();
-        ctx.arc(Math.round(Math.random() * 360) + 20, Math.round(Math.random() * 360) + 20, Math.round(Math.random() * 7) + 1, 0, Math.PI * 2);
+        ctx.arc(Math.round(await random() * 360) + 20, Math.round(await random() * 360) + 20, Math.round(await random() * 7) + 1, 0, Math.PI * 2);
         ctx.fill();
     }
 
@@ -131,7 +143,7 @@ module.exports = async function createCaptcha(caseSensitive) {
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.translate(0, 250);
-    ctx.translate(Math.round(Math.random() * 100 - 50) + 200, -1 * Math.round(Math.random() * (250 / 4) - 250 / 8) - 250 / 2);
+    ctx.translate(Math.round(await random() * 100 - 50) + 200, -1 * Math.round(await random() * (250 / 4) - 250 / 8) - 250 / 2);
     ctx.rotate(Math.random() - 0.5);
 
     // Set text value and print it to canvas
@@ -149,12 +161,12 @@ module.exports = async function createCaptcha(caseSensitive) {
 
         let color = "#";
         while (color.length < 7) {
-            color += Math.round(Math.random() * 16).toString(16);
+            color += Math.round(await random() * 16).toString(16);
         }
 
         color += "a0";
         ctx.fillStyle = color;
-        ctx.arc(Math.round(Math.random() * 400), Math.round(Math.random() * 250), Math.random() * 2, 0, Math.PI * 2);
+        ctx.arc(Math.round(await random() * 400), Math.round(await random() * 250), await random() * 2, 0, Math.PI * 2);
         ctx.fill();
     }
 
@@ -163,3 +175,5 @@ module.exports = async function createCaptcha(caseSensitive) {
         text: text
     };
 }
+
+console.log(createCaptcha(true));
