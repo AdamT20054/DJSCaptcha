@@ -1,5 +1,6 @@
 const copyArray = require(`./copyArray`)
 // https://github.com/lodash/lodash/blob/master/shuffle.js
+const crypto = require('crypto').webcrypto;
 
 
 
