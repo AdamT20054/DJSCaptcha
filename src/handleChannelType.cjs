@@ -13,6 +13,7 @@ module.exports = async function handleChannelType(client, options, user) {
     } else {
         if (options.sendToTextChannel === true) {
             // If the channel ID is provided, and the sendToTextChannel option is true, set channel as the text channel
+            // noinspection JSUnresolvedVariable
             channel = (await client.guilds.fetch(options.guildID)).channels.resolve(options.channelID);
         }
     }
