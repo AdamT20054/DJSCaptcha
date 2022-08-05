@@ -91,6 +91,9 @@ class Captcha extends EventEmitter {
          */
         this.options = options;
 
+        if(options.guildID) {
+            console.warn(`[Captcha] The guildID option is deprecated as of v1.3.2! Remove the guildID line from your captcha options to clear this warning.`);
+        }
 
         if ((options.sendToTextChannel === true) && (!options.channelID)) {
             console.log(`[Captcha] No channel ID provided`);
