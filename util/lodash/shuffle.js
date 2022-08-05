@@ -19,7 +19,7 @@ const random = require(`../crypto/random.js`);
  * shuffle([1, 2, 3, 4])
  * // => [4, 1, 3, 2]
  */
-function shuffle(array) {
+module.exports = async function shuffle(array) {
     const length = array == null ? 0 : array.length
     if (!length) {
         return []
@@ -28,12 +28,10 @@ function shuffle(array) {
     const lastIndex = length - 1
     const result = copyArray(array)
     while (++index < length) {
-        const rand = index + Math.floor(random() * (lastIndex - index + 1))
+        const rand = index + Math.floor(await random() * (lastIndex - index + 1))
         const value = result[rand]
         result[rand] = result[index]
         result[index] = value
     }
     return result
 }
-
-module.exports = shuffle
