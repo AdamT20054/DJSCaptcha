@@ -9,7 +9,6 @@ const handleChannelType = require("./handleChannelType.cjs");
  *
  * Captcha Options
  * @typedef {object} CaptchaOptions
- * @property {string} guildID - The guild ID to send the captcha to
  * @property {string} [roleAddID=undefined] - The role ID to add to the user when they complete the captcha
  * @property {string} [roleRemoveID=undefined] - The role ID to remove from the user when they fail to complete the captcha
  * @property {string} [channelID=undefined] - The channel ID to send the captcha to
@@ -37,9 +36,7 @@ class Captcha extends EventEmitter {
      * @param {CaptchaOptions} options - The options to create the captcha with
      * @param {Discord.Client} client - The client to create the captcha with
      *
-     *
-     * - `guildID` - The guild ID to send the captcha to
-     *
+     **
      * - `roleAddID` - The role ID to add to the user when they complete the captcha
      *
      * - `roleRemoveID` - The role ID to remove from the user when they fail to complete the captcha
@@ -94,11 +91,6 @@ class Captcha extends EventEmitter {
          */
         this.options = options;
 
-
-        if (!options.guildID) {
-            console.log(`[Captcha] No guild ID provided`);
-            process.exit(1);
-        }
 
         if ((options.sendToTextChannel === true) && (!options.channelID)) {
             console.log(`[Captcha] No channel ID provided`);
@@ -286,7 +278,7 @@ class Captcha extends EventEmitter {
             catch {
                 // Fetching the guild and channel ID's from options
                 // noinspection JSUnresolvedVariable
-                channel = (await this.client.guilds.fetch(this.options.guildID)).channels.resolve(this.options.channelID);
+                channel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.channelID);
                 if (this.options.channelID) {
                     // Sending the captcha to the channel.
                     captchaEmbed = await channel.send({
