@@ -118,9 +118,9 @@ client.on('guildMemberAdd', async (member) => {
 ## To use the default embeds, simply use the following code:
 
 ```javascript
-    customPromptEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
-    customSuccessEmbed: new EmbedBuilder(), // [Optional] Customise the embed that will be sent
-    customFailureEmbed: new EmbedBuilder() // [Optional] Customise the embed that will be sent
+    customPromptEmbed: new EmbedBuilder(),
+    customSuccessEmbed: new EmbedBuilder(),
+    customFailureEmbed: new EmbedBuilder()
 ```
 ### To learn more about creating your own embeds, refer to the [Discord.js EmbedBuilder](https://discordjs.guide/popular-topics/embeds) documentation.
 <br/>
