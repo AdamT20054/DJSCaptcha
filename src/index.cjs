@@ -77,6 +77,11 @@ class Captcha extends EventEmitter {
     //  */
     constructor(client, options = {}) {
         super();
+        
+        setTimeout(() => {
+            const version = Number(process.version.split('.')[0].replace('v', ''));
+            if (version < 16) return console.log('\n\nPlease upgrade to Node v16 or higher to use this DiscordJS V14 module.\n Download: https://nodejs.org/en/download/\n\n Facing issues? Open an issue here: https://github.com/AdamT20054/DJSCaptcha/issues\n Github: https://github.com/AdamT20054/DJSCaptcha');
+        }, 8000);
 
         if(!client) {
             console.log(`[Captcha] No client provided`);
