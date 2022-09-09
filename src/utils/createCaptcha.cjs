@@ -1,5 +1,5 @@
-const shuffle = require(`../util/lodash/shuffle.js`);
-const random = require(`../util/crypto/random.js`);
+const shuffle = require(`../../util/lodash/shuffle.js`);
+const random = require(`../../util/crypto/random.js`);
 
 /**
  * Asynchronously Generates a CAPTCHA.
@@ -24,8 +24,6 @@ module.exports = async function createCaptcha(length = 6, blacklist = "") {
     if (typeof blacklist !== "string") throw new Error("Captcha Generation Error: The blacklist parameter must be a string.\nNeed help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues");
     if (blacklist.match(/[^a-zA-Z0-9]/)) throw new Error("Captcha Generation Error: The blacklist parameter must only contain alphanumeric characters.\nNeed help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues");
 
-    chars.splice(0, chars.length, ...chars.filter(c => !blacklist.includes(c)));
-    chars = await shuffle(chars);
 
     let chars = [
         "a",
@@ -91,6 +89,9 @@ module.exports = async function createCaptcha(length = 6, blacklist = "") {
         "8",
         "9"
     ];
+
+    chars.splice(0, chars.length, ...chars.filter(c => !blacklist.includes(c)));
+    chars = await shuffle(chars);
 
 
     // Remove blacklisted characters from the character list
