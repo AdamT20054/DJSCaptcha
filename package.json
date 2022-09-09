@@ -24,8 +24,7 @@
   "description": "A NPM module made to create a CAPTCHA to present to server members.",
   "dependencies": {
     "canvas": "^2.9.3",
-    "discord.js": "^14.1.2",
-    "np": "^7.6.2"
+    "discord.js": "^14.1.2"
   },
   "repository": {
     "type": "git",

@@ -36,7 +36,6 @@ class Captcha extends EventEmitter {
      * @param {CaptchaOptions} options - The options to create the captcha with
      * @param {Discord.Client} client - The client to create the captcha with
      *
-     **
      * - `roleAddID` - The role ID to add to the user when they complete the captcha
      *
      * - `roleRemoveID` - The role ID to remove from the user when they fail to complete the captcha
@@ -44,7 +43,7 @@ class Captcha extends EventEmitter {
      * - `channelID` - The channel ID to send the captcha to
      *
      * - `sendToTextChannel` - Whether to send the captcha to a text channel or a DM
-     *
+     **
      * - `addRoleOnSuccess` - Whether to add the role to the user when they complete the captcha
      *
      * - `removeRoleOnSuccess` - Whether to remove the role from the user when they complete the captcha
