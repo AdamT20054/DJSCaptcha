@@ -328,7 +328,7 @@ class Captcha extends EventEmitter {
             captchaIncorrect = this.options.customFailureEmbed;
         }
 
-        / Construct the default captchaCorrect embed
+        // Construct the default captchaCorrect embed
         let captchaCorrect = new EmbedBuilder()
             .setTitle("✅ You Completed the CAPTCHA!")
             .setDescription(`${member.user}, you completed the CAPTCHA successfully! You have been given access to **${member.guild.name}**!`)
