@@ -79,7 +79,7 @@ client.on('guildMemberAdd', async (member) => {
         channelID: "803763753429762100", // [Optional if sendToTextChannel = false] The ID of the channel to send the CAPTCHA to.
         sendToTextChannel: false, // [Optional | defaults to false] Whether to send the CAPTCHA to a text channel.
         addRoleOnSuccess: true, // [Optional | defaults to true] Whether you want the bot to add the role to the user if the captcha is solved.
-        removeRoleOnSuccess: true, // [Optional | defaults to false] Whether you want the bot to remove the role from the user if the captcha is not solved.
+        removeRoleOnSuccess: true, // [Optional | defaults to false] Whether you want the bot to remove the role from the user if the captcha is solved.
         kickOnFailure: true, // [Optional | defaults to false] Whether you want the bot to kick the user if the captcha is failed. Kicks happen 7.5seconds after the captcha has timedout/failed.
         kickIfRoleAdded: false, // [Optional | defaults to false | kickOnFailure must be true] Whether to kick the user if they have the role added to them without the captcha being completed.
         kickIfRoleRemoved: false, // [Optional | defaults to false | kickOnFailure must be true] Whether to kick the user if they have the role removed from them without the captcha being completed
