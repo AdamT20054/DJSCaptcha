@@ -1,4 +1,4 @@
-const {Client, GuildMember, EmbedBuilder, ChannelType} = require("discord.js");
+const { Client, GuildMember, EmbedBuilder, ChannelType } = require("discord.js");
 const EventEmitter = require("events");
 const createCaptcha = require("../utils/createCaptcha.cjs");
 const handleChannelType = require("../utils/handleChannelType.cjs");
