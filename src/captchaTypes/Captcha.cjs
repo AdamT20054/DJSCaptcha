@@ -97,7 +97,7 @@ class Captcha extends EventEmitter {
      *     attempts: 3, // [Optional | defaults to 3] The number of attempts before captcha is considered to be failed.
      *     timeout: 30000, // [Optional | defaults to 60000] The time the user has to solve the captcha on each attempt in milliseconds.
      *     showAttemptCount: true, // [Optional | defaults to true] Whether to show the number of attempts left in embed footer.
-     *     customPromptEmbed: new EmbedBuilder() // [Optional] Customise the embed that will be sent
+     *     customPromptEmbed: new EmbedBuilder() // [Optional] Customise the embed that will be sent.
      *             .setTitle(`Welcome to ${member.guild.name}!`)
      *             .addFields({
      *                 name: "I'm Not a Robot",
