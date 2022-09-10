@@ -426,41 +426,30 @@ class Captcha extends EventEmitter {
                                 captchaOptions: captchaData.options
                             })
 
-                            await captchaEmbed.delete({
+                            captchaEmbed.delete({
                                 reason: "Captcha Timeout"
                             });
 
                             await channel.send({
                                 embeds: [captchaIncorrect]
                             }).then(async msg => {
+                                console.log(`[Captcha] ${member.user.tag} failed to solve the CAPTCHA in time!`)
+                                // wait 7.5 seconds, then delete the message
+
                                 if (captchaData.options.kickOnFailure) {
                                     // if user has addRoleID role equipped, then they will be kicked
-                                    if ((member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved))) {
-                                        await member.kick({
+                                    if ((member.roles.cache.some(role => role.id === captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)) && (!(captchaData.options.kickIfRoleRemoved)))) {
+                                        setTimeout(() => member.kick({
                                             reason: `Failed to pass CAPTCHA`
-                                        });
-                                    }
-                                    if ((captchaData.options.kickIfRoleRemoved === false) && (captchaData.options.kickIfRoleAdded === false)) {
-                                        await member.kick({
-                                            reason: `Failed to pass CAPTCHA`
-                                        });
+                                        }, 7500));
                                     }
                                 }
-                                if ((channel.type === ChannelType.GuildText) && (!member.roles.cache.has(captchaData.options.roleAddID))) {
-                                    setTimeout(() => msg.delete({
-                                        reason: `Deleting from Captcha timeout`
-                                    }), 7500);
-                                    if ((member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved))) {
 
-                                        setTimeout(() => member.kick({
-                                            reason: "Failed to pass CAPTCHA"
-                                        }), 7500);
-                                    }
-                                    if ((captchaData.options.kickIfRoleRemoved === false) && (captchaData.options.kickIfRoleAdded === false)) {
-                                        await member.kick({
-                                            reason: `Failed to pass CAPTCHA`
-                                        });
-                                    }
+                                if (channel.type === ChannelType.GuildText) {
+                                    setTimeout(() => msg.delete({
+                                        reason: "Captcha Timeout"
+                                    }), 7500);
+
                                 }
                             })
                             return false;
@@ -577,24 +566,37 @@ class Captcha extends EventEmitter {
                                 await captchaEmbed.delete({
                                     reason: "Deleting CAPTCHA Message"
                                 });
+
+
                             }
 
                             await channel.send({
                                 embeds: [captchaIncorrect]
                             }).then(async msg => {
+                                setTimeout(() => msg.delete({
+                                    reason: "Deleting incorrect captcha"
+                                }), 7500);
                                 // if kickOnFailure is true, it will kick the user.
                                 if (captchaData.options.kickOnFailure) {
-                                    if ((member.roles.cache.has(captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((!member.roles.cache.has(captchaData.options.roleRemoveID)) && (captchaData.options.kickIfRoleRemoved))) {
-                                        if (channel.type === "GUILD_TEXT") {
+                                    // Fetch the member
+                                    console.log(captchaData.options.roleAddID);
+                                    console.log((member.roles.cache.some(role => role.id === captchaData.options.roleAddID)));
+                                    console.log((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)))
+                                    // If user had RoleAddID and KickIfRoleAdded is true, it will kick the user.
+                                    if ( (member.roles.cache.some(role => role.id === captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)) && (!(captchaData.options.kickIfRoleRemoved)))) {
+                                        console.log(`test`)
+                                        if (channel.type === ChannelType.GuildText) {
                                             setTimeout(() => msg.delete({
                                                 reason: "Deleting from Captcha timeout"
                                             }), 7500);
-                                            setTimeout(() => member.kick({
-                                                reason: "Failed to pass CAPTCHA"
-                                            }), 7500);
                                         }
+                                        setTimeout(() => member.kick({
+                                            reason: "Failed to pass CAPTCHA"
+                                        }), 7500);
+
                                     }
                                 }
+
                             });
                             return false;
                         }
@@ -613,3 +615,5 @@ class Captcha extends EventEmitter {
 }
 
 module.exports = Captcha;
+
+// TODO: Update the if statment to properly check whether they need to be kicked or not. Atm doesn't do anyone without a role if kickIfRoleAdded is false.

@@ -51,6 +51,10 @@ sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev l
 ```
 For more information on installing see [the Canvas Ubuntu and other Debian based systems installation page](https://github.com/Automattic/node-canvas/wiki/Installation%3A-Ubuntu-and-other-Debian-based-systems)
 
+# Important!
+If you wish to use the non-interaction version, you MUST enable Message_content and guild_members intent in the dev portal. Both of these permissions must be added to the bot for them to see when the user has joined, and to see what their response for the captcha is.
+
+Please use the interaction version where possible.
 <br/>
 
 
