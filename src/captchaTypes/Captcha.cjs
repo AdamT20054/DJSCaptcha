@@ -491,24 +491,7 @@ class Captcha extends EventEmitter {
                         // Checking if the user has responded to the captcha. If they have not responded, it will kick them from the server.
                         if (!responses.size) {//If no response was given, CAPTCHA is fully cancelled here
                             // Send a log embed to the channel
-                            if(captchaData.options.logChannel !== false) {
-                                try {
-                                    const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
-                                    logChannel.send({
-                                        embeds: [
-                                            new EmbedBuilder()
-                                                .setTitle("🔐 Captcha Cancelled! 🔐")
-                                                .setDescription(`Captcha cancelled for ${member.user}!`)
-                                                .setColor("#00e0ff")
-                                                .setThumbnail(member.guild.iconURL({dynamic: true}))
-                                                .setTimestamp()
-                                        ]
-                                    })
-                                }
-                                catch {
-                                    console.log(`[Captcha] Error sending Captcha Cancelled Log for ${member.user.tag}! Need help? Open a issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
-                                }
-                            }
+
 
                             //emit timeout event
                             captchaData.emit("timeout", {
@@ -527,14 +510,14 @@ class Captcha extends EventEmitter {
                                 embeds: [captchaIncorrect]
                             }).then(async msg => {
                                 // log
-                                if(this.options.logChannel !== false) {
+                                if(captchaData.options.logChannel !== false) {
                                     try {
-                                        const logChannel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.logChannel)
+                                        const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
                                         logChannel.send({
                                             embeds: [
                                                 new EmbedBuilder()
                                                     .setTitle("🔐 Captcha Timeout! 🔐")
-                                                    .setDescription(`Captcha timed out for ${member.user} in ${channel}!`)
+                                                    .setDescription(`Captcha timed out for ${member.user}!`)
                                                     .setColor("#00e0ff")
                                                     .setThumbnail(member.guild.iconURL({dynamic: true}))
                                                     .setTimestamp()
@@ -679,6 +662,7 @@ class Captcha extends EventEmitter {
                                     })
                                 }
                                 catch (err) {
+                                    console.log(err)
                                     console.log(`[Captcha] Error sending log embed to ${captchaData.options.logChannel}! Need help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
                                 }
                             }
