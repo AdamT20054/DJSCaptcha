@@ -14,6 +14,7 @@ const handleChannelType = require("../utils/handleChannelType.cjs");
  * @typedef {Object} CaptchaOptions
  * @prop {String} [roleID=undefined] (OPTIONAL): The ID of the Discord Role to Give when the CAPTCHA is complete.
  * @prop {String} [channelID=undefined] (OPTIONAL): The ID of the Discord Text Channel to Send the CAPTCHA to if the user's Direct Messages are locked. Use the option "sendToTextChannel", and set it to "true" to always send the CAPTCHA to the Text Channel.
+ * @prop {String} [logChannel=undefined] (OPTIONAL): The ID of the Discord Text Channel to Send the CAPTCHA Log to (must be in same guild as the user).
  * @prop {Boolean} [sendToTextChannel=false] (OPTIONAL): Whether you want the CAPTCHA to be sent to a specified Text Channel instead of Direct Messages, regardless of whether the user's DMs are locked. Use the option "channelID" to specify the Text Channel.
  * @prop {Boolean} [addRoleOnSuccess=true] (OPTIONAL): Whether you want the Bot to Add the role to the User if the CAPTCHA is Solved Successfully.
  * @prop {Boolean} [kickOnFailure=true] (OPTIONAL): Whether you want the Bot to Kick the User if the CAPTCHA is Failed.
@@ -34,11 +35,15 @@ class Captcha extends EventEmitter {
      *
      * __Captcha Options__
      *
+     * - `guildID`: The ID of the Discord Guild.
+     *
      * - `roleAddID` - The role ID to add to the user when they complete the captcha
      *
      * - `roleRemoveID` - The role ID to remove from the user when they fail to complete the captcha
      *
      * - `channelID` - The channel ID to send the captcha to
+     *
+     * - `logChannel` - The channel ID to send the captcha log to
      *
      * - `sendToTextChannel` - Whether to send the captcha to a text channel or a DM
      **
@@ -87,6 +92,7 @@ class Captcha extends EventEmitter {
      *     roleAddID: "Role ID Here", // [Optional if addRoleOnSuccess = false] The ID of the role to add to the user.
      *     roleRemoveID: "Role ID Here", // [Optional if removeRoleOnSuccess = false] The ID of the role to remove from the user.
      *     channelID: "Text Channel ID Here", // [Optional if sendToTextChannel = false] The ID of the channel to send the CAPTCHA to.
+     *     logChannel: "Text Channel ID Here", // [Optional] The ID of the channel to send the CAPTCHA log to. (must be in same guild as the user)
      *     sendToTextChannel: false, // [Optional | defaults to false] Whether to send the CAPTCHA to a text channel.
      *     addRoleOnSuccess: true, [Optional | defaults to true] Whether you want the bot to add the role to the user if the captcha is solved.
      *     removeRoleOnSuccess: true, [Optional | defaults to true] Whether you want the bot to remove the role from the user if the captcha is solved.
@@ -152,6 +158,8 @@ class Captcha extends EventEmitter {
             console.log(`[Captcha] No role ID to add provided`);
             process.exit(1);
         }
+
+
 
         if ((options.removeRoleOnSuccess === true) && (!options.roleRemoveID)) {
             console.log(`[Captcha] No role ID to remove provided`);
@@ -247,6 +255,7 @@ class Captcha extends EventEmitter {
      *     roleAddID: "Role ID Here", // [Optional if addRoleOnSuccess = false] The ID of the role to add to the user.
      *     roleRemoveID: "Role ID Here", // [Optional if removeRoleOnSuccess = false] The ID of the role to remove from the user.
      *     channelID: "Text Channel ID Here", // [Optional if sendToTextChannel = false] The ID of the channel to send the CAPTCHA to.
+     *     logChannel: "Text Channel ID Here", // [Optional] The ID of the channel to send the CAPTCHA log to.
      *     sendToTextChannel: false, // [Optional | defaults to false] Whether to send the CAPTCHA to a text channel.
      *     addRoleOnSuccess: true, [Optional | defaults to true] Whether you want the bot to add the role to the user if the captcha is solved.
      *     removeRoleOnSuccess: true, [Optional | defaults to true] Whether you want the bot to remove the role from the user if the captcha is solved.
@@ -360,6 +369,28 @@ class Captcha extends EventEmitter {
         }
         captchaPrompt.setImage('attachment://captcha.png')
 
+
+        async function kickCheck(member, captchaData) {
+            if ((member.roles.cache.some(role => role.id === captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || (!(member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)) && ((captchaData.options.kickIfRoleRemoved)))) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (this.options.logChannel) {
+            // Check channel exists
+            const channel = member.guild.channels.fetch(this.options.logChannel).catch(err => {
+                console.log(`[Captcha] Error fetching log channel: ${err}`);
+                this.options.logChannel === false;
+            });
+            if(!channel) {
+                console.log(`[Captcha] The log channel ID provided is innaccessible or invalid`);
+                this.options.logChannel === false;
+            }
+        }
+
         await handleChannelType(this.client, this.options, member).then(async channel => {
             let captchaEmbed;
 
@@ -383,6 +414,27 @@ class Captcha extends EventEmitter {
                 // noinspection JSUnresolvedVariable
                 channel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.channelID)
                 if (this.options.channelID) {
+                    // Send a log embed to the channel
+                    if(this.options.logChannel !== false) {
+                        try {
+                            const logChannel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.logChannel)
+                            logChannel.send({
+                                embeds: [
+                                    new EmbedBuilder()
+                                        .setTitle("🔐 Captcha started! 🔐")
+                                        .setDescription(`Captcha started for ${member.user} in ${channel}!`)
+                                        .setColor("#00e0ff")
+                                        .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                        .setTimestamp()
+
+
+                                ]
+                            })
+                        }
+                        catch {
+                            console.log(`[Captcha] Error sending log to channel ${this.options.logChannel}. Need help? Open a issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                        }
+                    }
                     // Sending the captcha to the channel.
                     captchaEmbed = await channel.send({
                         embeds: [captchaPrompt],
@@ -391,14 +443,36 @@ class Captcha extends EventEmitter {
                         ]
                     })
                 } else {
+                    // Send a log embed to the channel
+                    if(this.options.logChannel !== false) {
+                        try {
+                            const logChannel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.logChannel)
+                            logChannel.send({
+                                embeds: [
+                                    new EmbedBuilder()
+                                        .setTitle("❌ Captcha Error! ❌")
+                                        .setDescription(`Captcha failed to start for ${member.user}!\n[Captcha] Error sending CAPTCHA for ${user.tag} \nYou can attempt have the CAPTCHA sent to a Text Channel if it can't send to DMs by using the "channelID" Option in the Constructor.\nNeed Help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                                        .setColor("#ff0000")
+                                        .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                        .setTimestamp()
+                                ]
+                            })
+                        }
+                        catch {
+                            console.log(`[Captcha] Error sending CAPTCHA for ${user.tag}. Need Help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                        }
+                    }
                     return console.log(`[Captcha] Error sending CAPTCHA for ${user.tag} \nYou can attempt have the CAPTCHA sent to a Text Channel if it can't send to DMs by using the "channelID" Option in the Constructor.\nNeed Help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`);
                 }
+
             }
 
             // Filtering the messages in the channel to only those that are sent by the user who is being verified.
             const captchaFilter = x => {
                 return (x.author.id === member.user.id)
             }
+
+
 
             /**
              * It takes a captchaData object, and then it awaits a message from the user, and then it checks if the message
@@ -415,7 +489,26 @@ class Captcha extends EventEmitter {
                         // Checking if the message is correct.
 
                         // Checking if the user has responded to the captcha. If they have not responded, it will kick them from the server.
-                        if (!responses.size) { //If no response was given, CAPTCHA is fully cancelled here
+                        if (!responses.size) {//If no response was given, CAPTCHA is fully cancelled here
+                            // Send a log embed to the channel
+                            if(captchaData.options.logChannel !== false) {
+                                try {
+                                    const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
+                                    logChannel.send({
+                                        embeds: [
+                                            new EmbedBuilder()
+                                                .setTitle("🔐 Captcha Cancelled! 🔐")
+                                                .setDescription(`Captcha cancelled for ${member.user}!`)
+                                                .setColor("#00e0ff")
+                                                .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                                .setTimestamp()
+                                        ]
+                                    })
+                                }
+                                catch {
+                                    console.log(`[Captcha] Error sending Captcha Cancelled Log for ${member.user.tag}! Need help? Open a issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                                }
+                            }
 
                             //emit timeout event
                             captchaData.emit("timeout", {
@@ -433,12 +526,31 @@ class Captcha extends EventEmitter {
                             await channel.send({
                                 embeds: [captchaIncorrect]
                             }).then(async msg => {
+                                // log
+                                if(this.options.logChannel !== false) {
+                                    try {
+                                        const logChannel = (await this.client.guilds.fetch(member.guild.id)).channels.resolve(this.options.logChannel)
+                                        logChannel.send({
+                                            embeds: [
+                                                new EmbedBuilder()
+                                                    .setTitle("🔐 Captcha Timeout! 🔐")
+                                                    .setDescription(`Captcha timed out for ${member.user} in ${channel}!`)
+                                                    .setColor("#00e0ff")
+                                                    .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                                    .setTimestamp()
+                                            ]
+                                        })
+                                    }
+                                    catch {
+                                        console.log("[CAPTCHA] Failed to send log message to log channel! Need help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues")
+                                    }
+                                }
                                 console.log(`[Captcha] ${member.user.tag} failed to solve the CAPTCHA in time!`)
                                 // wait 7.5 seconds, then delete the message
 
                                 if (captchaData.options.kickOnFailure) {
                                     // if user has addRoleID role equipped, then they will be kicked
-                                    if ((member.roles.cache.some(role => role.id === captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)) && (!(captchaData.options.kickIfRoleRemoved)))) {
+                                    if (await kickCheck(member, captchaData) === true) {
                                         setTimeout(() => member.kick({
                                             reason: `Failed to pass CAPTCHA`
                                         }, 7500));
@@ -477,6 +589,25 @@ class Captcha extends EventEmitter {
                         }
 
                         if (answer === captcha.text) { //If the answer is correct, this code will execute
+                            // Send a log embed to the channel
+                            if(captchaData.options.logChannel !== false) {
+                                try {
+                                    const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
+                                    logChannel.send({
+                                        embeds: [
+                                            new EmbedBuilder()
+                                                .setTitle("✅ Captcha Passed! ✅")
+                                                .setDescription(`Captcha passed for ${member.user}!`)
+                                                .setColor("#00ff00")
+                                                .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                                .setTimestamp()
+                                        ]
+                                    })
+                                }
+                                catch (e) {
+                                    console.log(`[Captcha] Error sending log embed to ${captchaData.options.logChannel}! Need help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                                }
+                            }
                             //emit success event
                             captchaData.emit("success", {
                                 member: member,
@@ -522,6 +653,35 @@ class Captcha extends EventEmitter {
                             });
                             return true;
                         } else { //If the answer is incorrect, this code will execute
+                            // Send a log embed to the channel
+                            if(captchaData.options.logChannel !== false) {
+                                try {
+                                    const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
+                                    logChannel.send({
+                                        embeds: [
+                                            new EmbedBuilder()
+                                                .setTitle("❌ Captcha Incorrect! ❌")
+                                                .setDescription(`Captcha Incorrect for ${member.user}!`)
+                                                .setFields([
+                                                    {
+                                                        name: "Attempted Answer",
+                                                        value: answer
+                                                    },
+                                                    {
+                                                        name: "Correct Answer",
+                                                        value: captcha.text
+                                                    }
+                                                ])
+                                                .setColor("#ff0000")
+                                                .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                                .setTimestamp()
+                                        ]
+                                    })
+                                }
+                                catch (err) {
+                                    console.log(`[Captcha] Error sending log embed to ${captchaData.options.logChannel}! Need help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`)
+                                }
+                            }
                             if (attemptsLeft > 1) { //If there are attempts left
                                 // If the user has more than one attempt left, it will send a new captcha.
                                 attemptsLeft--;
@@ -552,6 +712,8 @@ class Captcha extends EventEmitter {
                                 return handleAttempt(captchaData);
                             }
                             //If there are no attempts left
+                            // Log the failed captcha
+
 
                             //emit failure event
                             captchaData.emit("failure", {
@@ -573,6 +735,36 @@ class Captcha extends EventEmitter {
                             await channel.send({
                                 embeds: [captchaIncorrect]
                             }).then(async msg => {
+                                if(captchaData.options.logChannel !== false) {
+                                    try {
+                                        const logChannel = (await captchaData.client.guilds.fetch(member.guild.id)).channels.resolve(captchaData.options.logChannel)
+                                        logChannel.send({
+                                            embeds: [
+                                                new EmbedBuilder()
+                                                    .setTitle("❌ Captcha Failed! ❌")
+                                                    .setDescription(`Captcha failed for ${member.user}!`)
+                                                    .setFields([
+                                                        {
+                                                            name: "Attempted Answer",
+                                                            value: answer
+                                                        },
+                                                        {
+                                                            name: "Correct Answer",
+                                                            value: captcha.text
+                                                        }
+                                                    ])
+                                                    .setColor("#ff0000")
+                                                    .setThumbnail(member.guild.iconURL({dynamic: true}))
+                                                    .setTimestamp()
+                                            ]
+                                        })
+
+                                    }
+                                    catch (err) {
+                                        console.log(`[Captcha] Error sending log message to ${captchaData.options.logChannel}! Need help? Open an issue at https://github.com/AdamT20054/DJSCaptcha/issues`);
+                                    }
+                                }
+
                                 setTimeout(() => msg.delete({
                                     reason: "Deleting incorrect captcha"
                                 }), 7500);
@@ -583,7 +775,7 @@ class Captcha extends EventEmitter {
                                     console.log((member.roles.cache.some(role => role.id === captchaData.options.roleAddID)));
                                     console.log((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)))
                                     // If user had RoleAddID and KickIfRoleAdded is true, it will kick the user.
-                                    if ( (member.roles.cache.some(role => role.id === captchaData.options.roleAddID) && (captchaData.options.kickIfRoleAdded)) || ((member.roles.cache.some(role => role.id === captchaData.options.roleRemoveID)) && (!(captchaData.options.kickIfRoleRemoved)))) {
+                                    if (await kickCheck(member, captchaData) === true) {
                                         console.log(`test`)
                                         if (channel.type === ChannelType.GuildText) {
                                             setTimeout(() => msg.delete({
@@ -614,6 +806,9 @@ class Captcha extends EventEmitter {
     }
 }
 
+
+
+
+
 module.exports = Captcha;
 
-// TODO: Update the if statment to properly check whether they need to be kicked or not. Atm doesn't do anyone without a role if kickIfRoleAdded is false.
