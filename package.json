@@ -1,6 +1,6 @@
 {
   "name": "djscaptcha",
-  "version": "2.0.0-1",
+  "version": "2.0.0-2",
   "main": "src/index.cjs",
   "scripts": {
     "test": "echo \"Error: no test specified\""
