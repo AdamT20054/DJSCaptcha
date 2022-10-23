@@ -274,7 +274,7 @@ class Captcha extends EventEmitter {
                 }
 
 
-                // Sending the captcha image to the channel.
+                // Sending the Captcha image to the channel.
                 // noinspection JSUnresolvedFunction
                 captchaEmbed = await channel.send({
                     embeds: [captchaPrompt],
