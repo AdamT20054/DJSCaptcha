@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\""
   },
   "engines": {
-    "node": ">=0.10.3 <15"
+    "node": ">=9.8.1 <=20.5.0"
   },
   "keywords": [
     "discord.js",
