@@ -1,6 +1,6 @@
 # Description
 
-Please include a summary of the changes and the related issue (if any). Please also include relevant motivation and context. List any dependencies that are required for this change.
+Please include a summary of the changes and the related issue (if any). Please also include relevant motivation and context. List any dependencies and their minimum and tested versions that are required for this change.
 <br/>
 <br/>
 
