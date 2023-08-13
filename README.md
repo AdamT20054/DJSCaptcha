@@ -21,7 +21,7 @@
 
 # Description
 
-DJS Captcha sets out to generate on-the-fly CAPTCHAs based off your desired inputs to present to members of your server. The module both creates the CAPTCHA, listens for a result and then acts on the result by removing and/or adding roles to users in your server.
+DJSCaptcha sets out to generate on-the-fly CAPTCHAs based off your desired inputs to present to members of your server. The module both creates the CAPTCHA, listens for a result and then acts on the result by removing and/or adding roles to users in your server.
 
 The module was designed to primarily be used as a welcome CAPTCHA verification system.
 <br/>
