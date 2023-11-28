@@ -29,7 +29,7 @@
     "canvas": "^2.9.3",
     "discord.js": "^14.1.2",
     "node-fetch": "^3.3.2",
-    "np": "^8.0.4"
+    "np": "^9.0.0"
   },
   "repository": {
     "type": "git",
