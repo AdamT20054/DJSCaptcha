@@ -4,7 +4,6 @@ const EventEmitter = require("events");
 const createCaptcha = require("./createCaptcha.cjs");
 const handleChannelType = require("./handleChannelType.cjs");
 
-
 /**
  *
  * Captcha Options
@@ -26,6 +25,7 @@ const handleChannelType = require("./handleChannelType.cjs");
  * @property {EmbedBuilder} [customSuccessEmbed=undefined] - The embed to send to the user when they complete the captcha
  * @property {EmbedBuilder} [customFailureEmbed=undefined] - The embed to send to the user when they fail to complete the captcha
  */
+
 
 class Captcha extends EventEmitter {
 
@@ -260,7 +260,7 @@ class Captcha extends EventEmitter {
 
         // Handling the captcha.
         // noinspection JSUnresolvedFunction
-        await handleChannelType(this.client, this.options, user).then(async channel => {
+        await handleChannelType(this.client, this.options, user, member).then(async channel => {
             let captchaEmbed;
 
 
