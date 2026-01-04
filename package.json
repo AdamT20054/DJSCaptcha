@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\""
   },
   "engines": {
-    "node": ">=9.8.1 <=20.5.0"
+    "node": ">=16.9.0"
   },
   "keywords": [
     "discord.js",
@@ -26,8 +26,8 @@
   "license": "GPL-3.0",
   "description": "A NPM module made to create a CAPTCHA to present to server members.",
   "dependencies": {
-    "canvas": "^2.9.3",
-    "discord.js": "^14.1.2",
+    "canvas": "^2.11.2",
+    "discord.js": "^14.25.1",
     "node-fetch": "^3.3.2",
     "np": "^9.2.0"
   },
