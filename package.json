@@ -1,6 +1,6 @@
 {
   "name": "djscaptcha",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "main": "src/index.cjs",
   "scripts": {
     "release": "np",
