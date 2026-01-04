@@ -3,10 +3,11 @@
   "version": "1.4.4",
   "main": "src/index.cjs",
   "scripts": {
+    "release": "np",
     "test": "echo \"Error: no test specified\""
   },
   "engines": {
-    "node": ">=16.9.0"
+    "node": ">=18.0.0"
   },
   "keywords": [
     "discord.js",
@@ -29,7 +30,7 @@
     "canvas": "^2.11.2",
     "discord.js": "^14.25.1",
     "node-fetch": "^3.3.2",
-    "np": "^9.2.0"
+    "np": "^10.2.0"
   },
   "repository": {
     "type": "git",
