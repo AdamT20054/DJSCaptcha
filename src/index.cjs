@@ -333,6 +333,7 @@ class Captcha extends EventEmitter {
                         await captchaEmbed.delete({
                             reason: "Captcha Timeout"
                         });
+                        try{
                         await channel.send({
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
@@ -366,6 +367,9 @@ class Captcha extends EventEmitter {
                                 }
                             }
                         })
+                    } catch (e){
+                        console.log((captchaData.options.kickIfRoleRemoved && captchaData.options.kickIfRoleAdded) ? "Either user has left server or kick user failed" : "User has left the server.");
+                    }
                         return false;
                     }
 
@@ -484,6 +488,7 @@ class Captcha extends EventEmitter {
                         }
 
                         // If channel is in a DM, it will send the incorrect embed.
+                        try{
                         await channel.send({
                             embeds: [captchaIncorrect],
                         }).then(async msg => {
@@ -501,7 +506,11 @@ class Captcha extends EventEmitter {
                                 }
                             }
 
-                        })
+                        });
+                    } catch(e){
+                console.log((captchaData.options.kickIfRoleRemoved && captchaData.options.kickIfRoleAdded) ? "[CAPTCHA] Either user"+ member.user.username +" has left server or kick user failed" : "[CAPTCHA] User" + member.user.username +" has left the server.");
+                    }
+
                         return false;
 
                     }
